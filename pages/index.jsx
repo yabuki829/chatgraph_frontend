@@ -27,7 +27,7 @@ export default function Home() {
   const instance = axios.create({
 
     // baseURL:  "http://127.0.0.1:8000/api/",
-    baseURL:"https://django-render-w9mc.onrender.com/api/",
+    baseURL:"https://chatgraph.onrender.com/api/",
 
     headers: {
       "Accept": "application/json",
