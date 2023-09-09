@@ -26,7 +26,8 @@ export default function Home() {
   // apiのクラスを作成する
   const instance = axios.create({
 
-    baseURL:  "http://127.0.0.1:8000/api/",
+    // baseURL:  "http://127.0.0.1:8000/api/",
+    baseURL:"https://django-render-w9mc.onrender.com/api/",
 
     headers: {
       "Accept": "application/json",
