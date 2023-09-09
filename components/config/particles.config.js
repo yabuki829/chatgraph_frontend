@@ -48,19 +48,7 @@ const particleConfig = {
           "mode": [],
           "type": "circle"
         },
-          // "onHover": {
-          //   "enable": true,
-          //   "mode": "bubble",
-          //   "parallax": {
-          //     "enable": false,
-          //     "force": 100,
-          //     "smooth": 10
-          //   }
-          // },
-          // "resize": {
-          //   "delay": 0.5,
-          //   "enable": true
-          // }
+       
       },
       "modes": {
         "trail": {
