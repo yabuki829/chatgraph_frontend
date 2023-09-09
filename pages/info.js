@@ -1,7 +1,9 @@
+
+import ParticleBackground from '../components/ParticleBackground';
 const info = () => {
   return (
     <div>
-      説明
+      <ParticleBackground/>
     </div>
   );
 }

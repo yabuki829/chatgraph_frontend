@@ -39,7 +39,7 @@ const WaveformChart = ({ data1, data2, labels }) => {
     }
   }, [data1, data2, labels]);
 
-  return <canvas ref={chartRef} />;
+  return <canvas  ref={chartRef} />;
 };
 
 export default WaveformChart;

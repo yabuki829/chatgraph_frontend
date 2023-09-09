@@ -3,10 +3,29 @@ import axios from 'axios';
 import Head from 'next/head'
 import YouTubeGraph from '../components/youtube_graph';
 import Header from '../components/header.jsx';
+
+
+import { useCallback } from "react";
+import Particles from 'react-tsparticles';
+import { loadFull } from "tsparticles"; 
+import particleConfig from "../components/config/particles.config";
+
 export default function Home() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [graphData, setGraphData] = useState(null);
+  const particlesInit = useCallback(async engine => {
+    console.log(engine);
+    // you can initiate the tsParticles instance (engine) here, adding custom shapes or presets
+    // this loads the tsparticles package bundle, it's the easiest method for getting everything ready
+    // starting from v2 you can add only the features you need reducing the bundle size
+    await loadFull(engine);
+}, []);
 
+  const particlesLoaded = useCallback(async container => {
+      console.log(container);
+  }, []);
+
+  // apiのクラスを作成する
   const instance = axios.create({
 
     baseURL:  "http://127.0.0.1:8000/api/",
@@ -37,13 +56,20 @@ export default function Home() {
   };
   return (
     
-    <div>
+    <div className='relative z-10'> {/* z-indexを1に設定する */}
+     <Particles
+        id="tsparticles"
+        init={particlesInit}
+        loaded={particlesLoaded}
+        options={particleConfig}
+        className="absolute top-0 left-0 w-full h-full z-[-1]"
+      />
        <Head>
         <title>草カウンターfor youtube</title>
       </Head>
       <Header/>
-      <div className='mt-32 h-16 flex flex-col justify-center items-center  '>
-        <h1 className='font-bold text-2xl md:text-3xl'>草カウンター for Youtube</h1>
+      <div className='mt-32 h-32 flex flex-col justify-center items-center  '>
+        <h1 className='font-bold text-2xl md:text-3xl  '>草カウンター for Youtube</h1>
        
       </div>
       
@@ -61,13 +87,14 @@ export default function Home() {
 
     {graphData && (
  
-      <YouTubeGraph videoId={graphData.data.youtube_id} 
+      <YouTubeGraph  videoId={graphData.data.youtube_id} 
                     data1={graphData.data.comment_counts} 
                     data2={graphData.data.grass_counts} 
                     labels={graphData.data.intervals}/>
     )}
    <br />
    <br />
+
   </div>
   )
 }

@@ -51,7 +51,7 @@ const YouTubeGraph = ({ videoId, data1, data2, labels }) => {
   }, [data1, data2, labels]);
 
   return (
-    <div>
+    <div >
         <div className='flex justify-center items-center'>
           <iframe
             width="560"
@@ -63,7 +63,7 @@ const YouTubeGraph = ({ videoId, data1, data2, labels }) => {
           ></iframe>
         </div>
         
-      <div className='m-10 md:m-auto  md:w-1/2 flex justify-center items-center'>
+      <div className='m-10 md:m-auto  md:w-1/2 flex justify-center items-center bg-white'>
         <canvas width="w-full" height="h-full" ref={chartRef} onClick={(e) => handleClick(e, chartInstance.current.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true))} />
       </div>
     </div>
