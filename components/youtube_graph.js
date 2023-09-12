@@ -10,7 +10,7 @@ const YouTubeGraph = ({ videoId, data1, data2, labels }) => {
   const handleClick = (event, chartElements) => {
     if (chartElements.length > 0) {
       const index = chartElements[0].index;
-      const time = labels[index];  // 前提として、labelsが秒単位の時間を示していると仮定しています
+      const time = labels[index];  
       setStartTime(time);
     }
   };
@@ -52,20 +52,25 @@ const YouTubeGraph = ({ videoId, data1, data2, labels }) => {
 
   return (
     <div >
-        <div className='flex justify-center items-center'>
-          <iframe
-            width="560"
-            height="315"
-            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startTime*60}`}
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
+      {videoId && (
+          <div>
+            <div className='flex justify-center items-center'>
+            <iframe
+              width="560"
+              height="315"
+              src={`https://www.youtube.com/embed/${videoId}?autoplay=1&start=${startTime*60}`}
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+           </div>
         
       <div className='m-10 md:m-auto  md:w-1/2 flex justify-center items-center bg-white'>
         <canvas width="w-full" height="h-full" ref={chartRef} onClick={(e) => handleClick(e, chartInstance.current.getElementsAtEventForMode(e, 'nearest', { intersect: true }, true))} />
       </div>
+          </div>
+      )}
+        
     </div>
   );
 };

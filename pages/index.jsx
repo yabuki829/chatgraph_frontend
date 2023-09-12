@@ -12,7 +12,7 @@ import Loading from '../components/load';
 
 export default function Home() {
   const [youtubeUrl, setYoutubeUrl] = useState('');
-  const [graphData, setGraphData] = useState(null);
+  const [graphData, setGraphData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const particlesInit = useCallback(async engine => {
 
@@ -26,8 +26,8 @@ export default function Home() {
   // apiのクラスを作成する
   const instance = axios.create({
 
-    // baseURL:  "http://127.0.0.1:8000/api/",
-    baseURL:"https://chatgraph.onrender.com/api/",
+    baseURL:  "http://127.0.0.1:8000/api/",
+    // baseURL:"https://chatgraph.onrender.com/api/",
 
     headers: {
       "Accept": "application/json",
@@ -38,32 +38,49 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setGraphData([])
+    if (isLoading) {
+        return;
+    }
 
-    try {
-      if (isLoading) {
-        return
-      }
-      setIsLoading(true)       
-      const response = await instance.post("v1/grass/",{ youtube_url: youtubeUrl })
-      setGraphData(response.data); 
-     
-    } catch (error) {
-      if (error.response) {
-        console.error('エラー１:', error.response.data);
-      } else if (error.request) {
-        console.error("エラー2",'API request was made but no response was received', error.request);
-      } else {
-        console.error("エラー3",'Error setting up the request', error.message);
-      }
+    setIsLoading(true);       
+    let next = 0;
+    let duration = 0
+    while (next >= 0) {  
+        try {
+            const response = await instance.post("v1/grass/", { youtube_url: youtubeUrl ,page: next ,duration:duration});
+            console.log(response.data)
+            // 既存のgraphDataと新しいデータを結合する
+            setGraphData(prevData => ({
+              comment_counts: [...(prevData?.comment_counts || []), ...response.data.data["comment_counts"]],
+              grass_counts: [...(prevData?.grass_counts || []), ...response.data.data["grass_counts"]],
+              intervals: [...(prevData?.intervals || []), ...response.data.data["intervals"]],
+              youtube_id: response.data.data["youtube_id"],
+              duration: response.data.data["duration"],
+              next: response.data.data["next"]
+          }));
+
+            next = response.data.data["next"];
+            duration = response.data.data["duration"]
+            if (next === -1) {
+              console.log("-1なので終了する")
+              console.log(graphData)
+              break
+            } 
+
+        } catch (error) {
+            console.error('Error during fetching:', error);
+            break; // エラーが発生した場合、ループを終了します
+        }
     }
-    finally {
-      setIsLoading(false);  // ← 応答が完了したらローディング状態をfalseに設定
-    }
-  };
+
+    setIsLoading(false);
+    
+};
   
   return (
     
-    <div className='relative z-10'> {/* z-indexを1に設定する */}
+    <div className='relative z-10'> 
        {isLoading && <Loading />} 
      <Particles
         id="tsparticles"
@@ -97,11 +114,14 @@ export default function Home() {
 
     <div className='mb-32'>
     {graphData && (
-      <YouTubeGraph  videoId={graphData.data.youtube_id} 
-                    data1={graphData.data.comment_counts} 
-                    data2={graphData.data.grass_counts} 
-                    labels={graphData.data.intervals}/>
+      <YouTubeGraph  
+        videoId={graphData.youtube_id} 
+        data1={graphData.comment_counts} 
+        data2={graphData.grass_counts} 
+        labels={graphData.intervals}
+      />
     )}
+
     </div>
     
  
