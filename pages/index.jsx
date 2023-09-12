@@ -109,7 +109,7 @@ export default function Home() {
             onChange={(e) => setYoutubeUrl(e.target.value)}
           />
           <br />
-               <p>コメントの総数が多いと20分以上かかります</p>
+          <p>貧弱サーバーのため取得できない場合がございます。</p>
         </form>
 
     <div className='mb-32'>
